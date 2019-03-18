@@ -15,7 +15,17 @@ class m190315_133427_create_checklist_table extends Migration
         $this->createTable('{{%checklist}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(),
+            'user_id' => $this->integer(),
         ]);
+
+        $this->addForeignKey(
+            'fk-checklist-user_id',
+            'checklist',
+            'user_id',
+            'user',
+            'id',
+            'CASCADE'
+        );
     }
 
     /**

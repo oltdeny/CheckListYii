@@ -30,4 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+    <p>
+        <?= Html::a('Checklists', ['check-list/index', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+    </p>
+
 </div>
