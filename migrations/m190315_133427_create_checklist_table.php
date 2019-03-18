@@ -3,20 +3,18 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%user}}`.
+ * Handles the creation of table `{{%checklist}}`.
  */
-class m190307_123207_create_user_table extends Migration
+class m190315_133427_create_checklist_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('{{%user}}', [
+        $this->createTable('{{%checklist}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(),
-            'email' => $this->string()->unique(),
-            'password' => $this->string()
         ]);
     }
 
@@ -25,6 +23,6 @@ class m190307_123207_create_user_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%user}}');
+        $this->dropTable('{{%checklist}}');
     }
 }

@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use app\models\Login;
-use app\models\Signup;
+use app\models\SignUp;
 use Yii;
 use yii\web\Controller;
 
@@ -15,16 +15,16 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
-    public function actionSignup()
+    public function actionSignUp()
     {
-        $model = new Signup();
-        if(Yii::$app->request->post('Signup')) {
+        $model = new SignUp();
+        if(Yii::$app->request->post('SignUp')) {
             $model->load(Yii::$app->request->post());
             if($model->validate() && $model->signup()) {
                 return $this->goHome();
             }
         }
-        return $this->render('signup', ['model' => $model]);
+        return $this->render('sign-up', ['model' => $model]);
     }
 
     public function actionLogin()
@@ -37,5 +37,11 @@ class SiteController extends Controller
             }
         }
         return $this->render('login', ['model' => $model]);
+    }
+
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+        return $this->goHome();
     }
 }

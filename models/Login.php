@@ -41,6 +41,6 @@ class Login extends Model
 
     public function login()
     {
-        Yii::$app->user->login($this->getUser());
+        return Yii::$app->user->login($this->getUser());
     }
 }

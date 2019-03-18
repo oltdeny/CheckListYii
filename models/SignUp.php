@@ -2,9 +2,11 @@
 
 namespace app\models;
 
+use Symfony\Component\Yaml\Yaml;
+use Yii;
 use yii\base\Model;
 
-class Signup extends Model
+class SignUp extends Model
 {
     public $name;
     public $email;
@@ -20,12 +22,13 @@ class Signup extends Model
         ];
     }
 
-    public function signup()
+    public function signUp()
     {
         $user = new User();
         $user->name = $this->name;
         $user->email = $this->email;
         $user->password = sha1($this->password);
-        return $user->save();
+        $user->save();
+        return Yii::$app->user->login($user);
     }
 }
