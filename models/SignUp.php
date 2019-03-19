@@ -12,6 +12,15 @@ class SignUp extends Model
     public $email;
     public $password;
 
+    public function attributeLabels()
+    {
+        return [
+            'name' => 'Name',
+            'email' => 'Email',
+            'password' => 'Password',
+        ];
+    }
+
     public function rules()
     {
         return [
@@ -28,7 +37,6 @@ class SignUp extends Model
         $user->name = $this->name;
         $user->email = $this->email;
         $user->password = sha1($this->password);
-        $user->save();
-        return Yii::$app->user->login($user);
+        return $user->save();
     }
 }
