@@ -70,6 +70,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function getCheckLists()
     {
         return $this->hasMany(CheckList::className(), ['user_id' => 'id']);
+    }
 
+    public function isActive()
+    {
+        return $this->status === 'active'? true : false;
     }
 }

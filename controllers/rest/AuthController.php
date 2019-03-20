@@ -37,17 +37,20 @@ class AuthController extends Controller
         $model->load(Yii::$app->request->bodyParams, '');
         if($model->validate()) {
             $user = $model->getUser();
-            $user->access_token = Yii::$app->security->generateRandomString();
-            return [
-                'access_token' => $user->access_token
-            ];
+            if($user->isActive()) {
+                $user->access_token = Yii::$app->security->generateRandomString();
+                $user->save();
+                return [
+                    'access_token' => $user->access_token
+                ];
+            }
+            else {
+                return [
+                    'message' => "You are blocked by admin"
+                ];
+            }
+
         }
         return $model;
-    }
-
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-        return $this->goHome();
     }
 }

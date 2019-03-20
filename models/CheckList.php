@@ -36,6 +36,18 @@ class CheckList extends \yii\db\ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        return [
+            'id' => 'id',
+            'name' => 'name',
+            'user_id' => 'user_id',
+            'items' => function() {
+                return $this->getItems()->all();
+            }
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
