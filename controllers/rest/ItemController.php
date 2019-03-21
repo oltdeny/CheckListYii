@@ -21,57 +21,67 @@ class ItemController extends Controller
         return $behaviors;
     }
 
-    public function actionCreate($id) {
+    public function actionCreate()
+    {
         $user = Yii::$app->user->identity;
+        $id = Yii::$app->request->post('check_list_id');
         $checkList = $user->getCheckLists()->where(['id' => $id])->one();
-        if($checkList) {
+        if ($checkList) {
             $item = new Item();
             $item->load(Yii::$app->request->bodyParams, '');
             $item->checklist_id = $id;
             $item->save();
-            return[
+            return [
                 'message' => 'success',
                 'item' => $item
             ];
         }
-        else {
-            return[
-                'message' => "unauthorised",
-            ];
-        }
+        return [
+            'message' => "unauthorised",
+        ];
     }
 
-    public function actionDelete($check_list_id, $item_id) {
+    public function actionDelete($id)
+    {
         $user = Yii::$app->user->identity;
-        $checkList = $user->getCheckLists()->where(['id' => $check_list_id])->one();
-        if($checkList && $item = $checkList->getItems()->where(['id' => $item_id])->one()){
-            $item->delete();
-            return [
-                'message' => 'success'
-            ];
+        $item = Item::findOne($id);
+        if ($item) {
+            $checkList = $item->getChecklist()->one();
+            $checkList = $user->getCheckLists()->where(['id' => $checkList->id])->one();
+            if ($checkList) {
+                $item->delete();
+                return [
+                    'message' => 'success'
+                ];
+            }
         }
-        else {
-            return [
-                'message' => 'unauthorised'
-            ];
-        }
+        return [
+            'message' => 'unauthorised'
+        ];
     }
 
-    public function actionUpdate($check_list_id, $item_id) {
+    public function actionUpdate($id)
+    {
         $user = Yii::$app->user->identity;
-        $checkList = $user->getCheckLists()->where(['id' => $check_list_id])->one();
-        if($checkList && $item = $checkList->getItems()->where(['id' => $item_id])->one()){
-            $item->load(Yii::$app->request->bodyParams, '');
-            $item->save();
-            return [
-                'message' => 'success'
-            ];
+        $item = Item::findOne($id);
+        if ($item) {
+            $checkList = $item->getChecklist()->one();
+            $checkList = $user->getCheckLists()->where(['id' => $checkList->id])->one();
+            if ($checkList) {
+                if ($item->status === 'todo') {
+                    $item->status = 'done';
+                } else {
+                    $item->status = 'todo';
+                }
+                $item->save();
+                return [
+                    'message' => 'success'
+                ];
+            }
         }
-        else {
-            return [
-                'message' => 'unauthorised'
-            ];
-        }
+        return [
+            'message' => 'unauthorised'
+        ];
     }
 
 

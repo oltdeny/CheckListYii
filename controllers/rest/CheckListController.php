@@ -3,10 +3,9 @@
 namespace app\controllers\rest;
 
 use app\models\CheckList;
-use app\models\User;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
-use yii\rest\ActiveController;
+use yii\filters\VerbFilter;
 use yii\rest\Controller;
 
 
@@ -22,66 +21,62 @@ class CheckListController extends Controller
         return $behaviors;
     }
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $user = Yii::$app->user->identity;
         $checkLists = $user->getCheckLists()->all();
-        return[
+        return [
             'checkLists' => $checkLists
         ];
     }
 
-    public function actionCreate() {
-        $user= Yii::$app->user->identity;
+    public function actionCreate()
+    {
+        $user = Yii::$app->user->identity;
         $count = $user->getCheckLists()->count();
         $max_count = $user->count;
-        if($count < $max_count) {
+        if ($count < $max_count) {
             $checkList = new CheckList();
             $checkList->load(Yii::$app->request->bodyParams, '');
             $checkList->user_id = Yii::$app->user->id;
             $checkList->save();
-            return[
-                'message' => 'success',
-                'checkList' => $checkList
-            ];
-        }
-        else {
-            return[
-                'message' => "You couldn't create more then $max_count check-lists",
-            ];
-        }
-    }
-
-    public function actionView($id) {
-        $user = Yii::$app->user->identity;
-        $checkList = $user->getCheckLists()->where(['id' => $id])->one();
-        if($checkList) {
-            return[
-                'message' => 'success',
-                'checkList' => $checkList
-            ];
-        }
-        else {
             return [
-                'message' => 'unauthorised'
+                'message' => 'success',
+                'checkList' => $checkList
             ];
         }
+        return [
+            'message' => "You couldn't create more then $max_count check-lists",
+        ];
     }
 
-    public function actionDelete($id) {
+    public function actionView($id)
+    {
         $user = Yii::$app->user->identity;
         $checkList = $user->getCheckLists()->where(['id' => $id])->one();
-        if($checkList) {
+        if ($checkList) {
+            return [
+                'message' => 'success',
+                'checkList' => $checkList
+            ];
+        }
+        return [
+            'message' => 'unauthorised'
+        ];
+    }
+
+    public function actionDelete($id)
+    {
+        $user = Yii::$app->user->identity;
+        $checkList = $user->getCheckLists()->where(['id' => $id])->one();
+        if ($checkList) {
             $checkList->delete();
             return [
                 'message' => 'success'
             ];
         }
-        else {
-            return [
-                'message' => 'unauthorised'
-            ];
-        }
+        return [
+            'message' => 'unauthorised'
+        ];
     }
-
-
 }
